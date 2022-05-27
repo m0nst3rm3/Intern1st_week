@@ -1,5 +1,5 @@
 print("-------------    PLEASE CREATE YOUR LOCATION LIST    -----------------\n")
-food_menu_options = {
+restaurant_menu_options = {
     1: 'Create Restaurant List',
     2: 'Read Restaurant',
     3: 'Update Restaurant',
@@ -11,8 +11,8 @@ location_list = []
 
 
 def print_menu():
-    for key in food_menu_options.keys():
-        print(key, '--', food_menu_options[key])
+    for key in restaurant_menu_options.keys():
+        print(key, '--', restaurant_menu_options[key])
 
 
 def create():
@@ -49,33 +49,40 @@ def delete():
 
 
 def selected_location():
+    selected = ''
     try:
-        print("Please choose your location:")
-        for idx, restaurant in enumerate(location_list):
-            print("{}) {}".format(idx + 1, restaurant))
-        selected = location_list[int(input("\n Enter the number to select location:    "))-1]
-        if selected in location_list:
-            print("Your location has been selected.\n")
-            return selected
+        print("Please choose your meal:")
+        for idx, food in enumerate(location_list):
+            print("{}) {}".format(idx + 1, food))
+        use_input = int(input("\nEnter the number for food:      "))
+        limit = len(location_list)
+        if use_input > limit:
+            print("Please Select from the list.")
+            return selected_location()
+        elif use_input <= 0:
+            print("2) Please select from the list. ")
+            return selected_location()
         else:
-            print("The location you chose is not feasible. ")
-            return selected
-
+            selected = location_list[use_input - 1]
+    except ValueError:
+        print("Please provide a number. \n")
+        return selected_location()
     except IndexError:
         print("Select from the list\n")
-    except UnboundLocalError:
-        print("Select from the list\n")
+    return selected
 
 
 def location():
     while True:
         print_menu()
-        option = ''
         try:
             option = int(input('Enter your choice: '))
-            print("\n")
+            if option not in range(1, 6):
+                print('Invalid option. Please enter a number between 1 and 5.\n')
+                continue
         except ValueError:
-            print('Wrong input. Please enter a number ...')
+            print('Invalid option. Please enter a number between 1 and 5.\n')
+            continue
 
         # Check what choice was entered and act accordingly
         if option == 1:
@@ -85,16 +92,23 @@ def location():
             read()
 
         elif option == 3:
-            update()
+            if len(location_list) == 0:
+                print("""\n\t \t There are no locations.
+                 Please Create List First. \n""")
+            else:
+                update()
 
         elif option == 4:
-            delete()
+            if len(location_list) == 0:
+                print("""\n\t \t There are no locations in the list.
+                 Please Create List First. \n""")
+            else:
+                delete()
 
         elif option == 5:
-            return selected_location()
-
-        else:
-            print('Invalid option. Please enter a number between 1 and 4.\n')
-            break
-
-    print(selected_location())
+            if len(location_list) == 0:
+                print("""\n\t \t There are no locations in the list.
+                 Please Create List First. \n""")
+            else:
+                return selected_location()
+    print("\n Your place: " + selected_location() + " has been selected.\n")

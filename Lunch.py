@@ -1,5 +1,5 @@
 print("-------------      PLEASE CREATE YOUR FOOD MENU     -----------------\n")
-restu_menu_options = {
+food_menu_options = {
     1: 'Create Food List',
     2: 'Read Food available',
     3: 'Update',
@@ -11,8 +11,8 @@ food_list = []
 
 
 def print_menu():
-    for key in restu_menu_options.keys():
-        print(key, '--', restu_menu_options[key])
+    for key in food_menu_options.keys():
+        print(key, '--', food_menu_options[key])
 
 
 def create():
@@ -49,32 +49,40 @@ def delete():
 
 
 def food_selected():
+    selected = ''
     try:
         print("Please choose your meal:")
         for idx, food in enumerate(food_list):
             print("{}) {}".format(idx + 1, food))
-        selected = food_list[int(input("\n Enter the number for food:   "))-1]
-
-        if selected not in food_list:
-            print("The food is not in menu. ")
-        elif selected not in food_list:
-            print("Your food has been selected.\n")
+        use_input = int(input("\nEnter the number for food:      "))
+        limit = len(food_list)
+        if use_input > limit:
+            print("Please Select from the list.")
+            return food_selected()
+        elif use_input <= 0:
+            print("2) Please select from the list. ")
+            return food_selected()
+        else:
+            selected = food_list[use_input - 1]
+    except ValueError:
+        print("Please provide a number. \n")
+        return food_selected()
     except IndexError:
         print("Select from the list\n")
-    except UnboundLocalError:
-        print("Select from the list\n")
-
     return selected
 
 
 def meal():
     while True:
         print_menu()
-        option = ''
         try:
             option = int(input('Enter your choice: '))
+            if option not in range(1, 6):
+                print('Invalid option. Please enter a number between 1 and 5.\n')
+                continue
         except ValueError:
-            print('Wrong input. Please enter a number ...')
+            print('Invalid option. Please enter a number between 1 and 5.\n')
+            continue
 
         # Check what choice was entered and act accordingly
         if option == 1:
@@ -102,10 +110,5 @@ def meal():
                 print("""\n\t \t There is no food in menu.
                  Please Create Menu First. \n""")
             else:
-                return food_selected(), print("Meal Confirmed", food_selected(),"\n")
-
-        else:
-            print('Invalid option. Please enter a number between 1 and 4.\n')
-            break
-
-    print(food_selected())
+                return food_selected()
+    print("\n Your order: " + food_selected() + " has been placed\n")
